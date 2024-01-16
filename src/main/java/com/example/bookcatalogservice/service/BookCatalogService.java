@@ -52,4 +52,13 @@ public class BookCatalogService {
             return VarList.RSP_ERROR;
         }
     }
+
+    public String deleteBookById(Integer bookId) {
+        if(bookCatalogRepo.existsById(bookId)){
+            bookCatalogRepo.deleteById(bookId);
+            return VarList.RSP_SUCCESS;
+        }else{
+            return VarList.RSP_NO_DATA_FOUND;
+        }
+    }
 }

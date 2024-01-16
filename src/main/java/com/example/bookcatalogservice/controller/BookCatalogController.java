@@ -99,6 +99,29 @@ public class BookCatalogController {
         }
     }
 
+    //delete book by id
+    @DeleteMapping(value="/deleteBook/{bookId}")
+    public ResponseEntity deleteBookByID(@PathVariable Integer bookId){
+        try{
+            String res = bookCatalogService.deleteBookById(bookId);
 
+            if(res.equals("00")){
+                responseDto.setCode("00");
+                responseDto.setMessage("successfully deleted");
+                responseDto.setContent(null);
+                return new ResponseEntity(responseDto, HttpStatus.ACCEPTED);
+            }else{
+                responseDto.setCode("05");
+                responseDto.setMessage("error");
+                responseDto.setContent(null);
+                return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception ex){
+            responseDto.setCode("05");
+            responseDto.setMessage(ex.getMessage());
+            responseDto.setContent(null);
+            return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
 
