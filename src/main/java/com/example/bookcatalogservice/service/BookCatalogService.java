@@ -7,8 +7,12 @@ import com.example.bookcatalogservice.repo.BookCatalogRepo;
 import com.example.bookcatalogservice.util.VarList;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -29,6 +33,12 @@ public class BookCatalogService {
             return VarList.RSP_SUCCESS;
         }
     }
+
+    public List<BookDto> getAllBooks() {
+        List<Book> allBooksFromDb = bookCatalogRepo.findAll();
+        return modelMapper.map(allBooksFromDb, new TypeToken<ArrayList<BookDto>>(){}.getType());
+    }
+
 
     //create a book in the database
 
