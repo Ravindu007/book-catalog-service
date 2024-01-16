@@ -29,8 +29,9 @@ public class BookCatalogController {
     @PostMapping(value = "/create")  //api/v1/bookCatalog/create
     public ResponseEntity createSingleBook(@RequestBody BookDto bookDto){
         try{
-           //save the book in the database
+            //save the book in the database
             String res = bookCatalogService.saveBook(bookDto);
+
 
             // handle the response
             if(res.equals("00")){
@@ -123,5 +124,27 @@ public class BookCatalogController {
             return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    //get a collection of bookIds of a particular title and send them to stock service
+    @GetMapping(value = "/getBookListofTitle/{title}")
+    public ResponseEntity getaBookListbyTitle(@PathVariable String title){
+        try{
+            //return a set of Ids
+            List<Integer> books = bookCatalogService.getAllbooksofParticlarTitle(title);
+
+            responseDto.setCode("00");
+            responseDto.setMessage("success");
+            responseDto.setContent(books);
+            return new ResponseEntity(responseDto, HttpStatus.ACCEPTED);
+
+        }catch (Exception ex){
+            responseDto.setCode("05");
+            responseDto.setMessage("error");
+            responseDto.setContent(null);
+            return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
 

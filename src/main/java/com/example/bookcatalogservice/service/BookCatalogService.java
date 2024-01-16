@@ -61,4 +61,10 @@ public class BookCatalogService {
             return VarList.RSP_NO_DATA_FOUND;
         }
     }
+
+    public List<Integer> getAllbooksofParticlarTitle(String title) {
+
+        List<Integer> bookList = bookCatalogRepo.findAllByTitle(title);
+        return bookList;
+    }
 }
