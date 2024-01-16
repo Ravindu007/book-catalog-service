@@ -72,4 +72,33 @@ public class BookCatalogController {
             return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
+
+    //update a book
+    @PutMapping(value = "/updateBook") //api/v1/bookCatalog/updateBook
+    public ResponseEntity updateABookById(@RequestBody BookDto updatedBook){
+        try{
+            String res = bookCatalogService.updateBookById(updatedBook);
+
+            //handling responses
+            if(res.equals("00")){
+                responseDto.setCode("00");
+                responseDto.setMessage("updated successfully");
+                responseDto.setContent(updatedBook);
+                return new ResponseEntity(responseDto, HttpStatus.ACCEPTED);
+            }else{
+                responseDto.setCode("05");
+                responseDto.setMessage("error");
+                responseDto.setContent(null);
+                return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
+            }
+        }catch(Exception ex){
+            responseDto.setCode("05");
+            responseDto.setMessage(ex.getMessage());
+            responseDto.setContent(null);
+            return new ResponseEntity(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }
+

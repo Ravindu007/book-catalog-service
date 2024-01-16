@@ -25,6 +25,8 @@ public class BookCatalogService {
     @Autowired
     private ModelMapper modelMapper;
 
+
+    //create a book in the database
     public String saveBook(BookDto bookDto) {
         if(bookCatalogRepo.existsById(bookDto.getBookId())){
             return VarList.RSP_DUPLICATED;
@@ -34,17 +36,20 @@ public class BookCatalogService {
         }
     }
 
+
+    //get all books in the database
     public List<BookDto> getAllBooks() {
         List<Book> allBooksFromDb = bookCatalogRepo.findAll();
         return modelMapper.map(allBooksFromDb, new TypeToken<ArrayList<BookDto>>(){}.getType());
     }
 
-
-    //create a book in the database
-
-    //view a book in the database
-
-    //update a book in the database
-
-    //delete a book in the database
+    //update an existing book
+    public String updateBookById(BookDto updatedBook) {
+        if(bookCatalogRepo.existsById(updatedBook.getBookId())){
+            bookCatalogRepo.save(modelMapper.map(updatedBook, Book.class));
+            return VarList.RSP_SUCCESS;
+        }else{
+            return VarList.RSP_ERROR;
+        }
+    }
 }
