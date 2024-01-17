@@ -100,6 +100,7 @@ public class BookCatalogController {
         }
     }
 
+
     //delete book by id
     @DeleteMapping(value="/deleteBook/{bookId}")
     public ResponseEntity deleteBookByID(@PathVariable Integer bookId){
@@ -126,17 +127,14 @@ public class BookCatalogController {
     }
 
 
+
     //get a collection of bookIds of a particular title and send them to stock service
     @GetMapping(value = "/getBookListofTitle/{title}")
-    public ResponseEntity getaBookListbyTitle(@PathVariable String title){
+    public  ResponseEntity<List<Integer>> getaBookListbyTitle(@PathVariable String title){
         try{
             //return a set of Ids
             List<Integer> books = bookCatalogService.getAllbooksofParticlarTitle(title);
-
-            responseDto.setCode("00");
-            responseDto.setMessage("success");
-            responseDto.setContent(books);
-            return new ResponseEntity(responseDto, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(books,HttpStatus.OK);
 
         }catch (Exception ex){
             responseDto.setCode("05");
