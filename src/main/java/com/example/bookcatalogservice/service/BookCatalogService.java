@@ -50,8 +50,6 @@ public class BookCatalogService {
     }
 
 
-
-
     //get all books in the database
     public List<BookDto> getAllBooks() {
         List<Book> allBooksFromDb = bookCatalogRepo.findAll();
@@ -69,6 +67,8 @@ public class BookCatalogService {
         }
     }
 
+
+    //delete a book
     public String deleteBookById(Integer bookId) {
         if(bookCatalogRepo.existsById(bookId)){
             Book book =  bookCatalogRepo.findById(bookId).get();
@@ -85,7 +85,7 @@ public class BookCatalogService {
     }
 
 
-    //get a list of books of a particular title
+    //get a list of books of a particular title and send them to inventory service
     public List<Integer> getAllbooksofParticlarTitle(String title) {
 
         List<Integer> bookList = bookCatalogRepo.findAllByTitle(title);
@@ -93,6 +93,9 @@ public class BookCatalogService {
     }
 
 
+
+    //purpose of this function is to delay the call for get a list of books for a particular title
+    //is used in create book and delete book services
     private void scheduleInventoryUpdate(String title) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 

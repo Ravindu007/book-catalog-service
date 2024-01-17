@@ -17,12 +17,12 @@ import java.util.List;
 @RequestMapping("api/v1/bookCatalog")
 public class BookCatalogController {
 
-    //Getting service here
     @Autowired
     private BookCatalogService bookCatalogService;
 
     @Autowired
     private ResponseDto responseDto;
+
 
 
     //create a book in the database
@@ -128,7 +128,7 @@ public class BookCatalogController {
 
 
 
-    //get a collection of bookIds of a particular title and send them to stock service
+    //get a collection of bookIds of a particular title and send them to inventory-service to update / create stock
     @GetMapping(value = "/getBookListofTitle/{title}")
     public  ResponseEntity<List<Integer>> getaBookListbyTitle(@PathVariable String title){
         try{
