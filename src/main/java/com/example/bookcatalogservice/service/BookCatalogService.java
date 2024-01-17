@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,23 +49,7 @@ public class BookCatalogService {
         }
     }
 
-    private void scheduleInventoryUpdate(String title) {
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-        // Define the task to update inventory
-        Runnable inventoryUpdateTask = () -> {
-            // Your inventory update logic goes here
-            inventoryInterface.updateListOfBooksForTitle(title);
-            System.out.println("Inventory updated for title: " + title);
-        };
-
-        // Schedule the inventory update task after a delay of 1 second
-        long delayInSeconds = 1;
-        executorService.schedule(inventoryUpdateTask, delayInSeconds, TimeUnit.SECONDS);
-
-        // Shutdown the executor service when no longer needed
-        executorService.shutdown();
-    }
 
 
     //get all books in the database
@@ -86,7 +71,13 @@ public class BookCatalogService {
 
     public String deleteBookById(Integer bookId) {
         if(bookCatalogRepo.existsById(bookId)){
+            Book book =  bookCatalogRepo.findById(bookId).get();
             bookCatalogRepo.deleteById(bookId);
+
+            //update the inventory
+            //have to call the /updateTheStockOfParticularTitle/{title} in inventory service
+            scheduleInventoryUpdate(book.getTitle());
+
             return VarList.RSP_SUCCESS;
         }else{
             return VarList.RSP_NO_DATA_FOUND;
@@ -99,5 +90,24 @@ public class BookCatalogService {
 
         List<Integer> bookList = bookCatalogRepo.findAllByTitle(title);
         return bookList;
+    }
+
+
+    private void scheduleInventoryUpdate(String title) {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        // Define the task to update inventory
+        Runnable inventoryUpdateTask = () -> {
+            // Your inventory update logic goes here
+            inventoryInterface.updateListOfBooksForTitle(title);
+            System.out.println("Inventory updated for title: " + title);
+        };
+
+        // Schedule the inventory update task after a delay of 1 second
+        long delayInSeconds = 1;
+        executorService.schedule(inventoryUpdateTask, delayInSeconds, TimeUnit.SECONDS);
+
+        // Shutdown the executor service when no longer needed
+        executorService.shutdown();
     }
 }
